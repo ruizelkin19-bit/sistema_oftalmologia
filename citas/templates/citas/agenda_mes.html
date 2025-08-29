@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Agenda disponible - {{ mes_actual|date:"F Y" }}</h2>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a href="?mes={{ mes_anterior.month }}&anio={{ mes_anterior.year }}" class="btn btn-outline-primary">
+            &laquo; Mes anterior
+        </a>
+        <a href="?mes={{ mes_siguiente.month }}&anio={{ mes_siguiente.year }}" class="btn btn-outline-primary">
+            Mes siguiente &raquo;
+        </a>
+    </div>
+
+    <table class="table table-bordered text-center calendar-table">
+        <thead class="table-dark">
+            <tr>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+                <th>Sábado</th>
+                <th>Domingo</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for semana in calendario %}
+            <tr>
+                {% for dia in semana %}
+                    {% if dia %}
+                        {% with fecha_str=dia|date:"Y-m-d" %}
+                            {% if dia >= hoy %}
+                                <td class="calendar-day {% if dia in dias_con_citas %}bg-warning{% endif %}">
+                                    <a href="{% url 'citas:agenda_dia' fecha=fecha_str %}" class="text-decoration-none text-dark">
+                                        <div class="fw-bold">{{ dia.day }}</div>
+                                        {% if dia in dias_con_citas %}
+                                            <small>{{ dias_con_citas|dict_get:dia }} citas</small>
+                                        {% else %}
+                                            <small class="text-muted">Disponible</small>
+                                        {% endif %}
+                                    </a>
+                                </td>
+                            {% else %}
+                                <td class="bg-light text-muted">
+                                    <div class="fw-bold">{{ dia.day }}</div>
+                                    <small>No disponible</small>
+                                </td>
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+    .calendar-table td {
+        height: 110px;
+        vertical-align: top;
+        padding: 8px;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+    .calendar-day:hover {
+        background-color: #e9f4ff;
+    }
+    .calendar-day a {
+        display: block;
+        height: 100%;
+        width: 100%;
+    }
+</style>
+{% endblock %}

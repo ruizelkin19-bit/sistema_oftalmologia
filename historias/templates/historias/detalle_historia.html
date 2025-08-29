@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Historia Clínica: {{ historia.numero_control }}</h2>
+
+  <!-- DATOS GENERALES -->
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Paciente:</strong> {{ historia.paciente.nombre }}</div>
+    <div class="col-md-6"><strong>Fecha:</strong> {{ historia.fecha|date:"d/m/Y" }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Ocupación:</strong> {{ historia.ocupacion }}</div>
+    <div class="col-md-4"><strong>Dirección:</strong> {{ historia.direccion }}</div>
+    <div class="col-md-4"><strong>Teléfono:</strong> {{ historia.telefono }}</div>
+  </div>
+
+  <!-- MOTIVO Y ANTECEDENTES -->
+  <h5 class="mt-4">Motivo y Antecedentes</h5>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Motivo de consulta:</strong> {{ historia.motivo_consulta }}</div>
+    <div class="col-md-6"><strong>Enfermedad actual:</strong> {{ historia.enfermedad_actual }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Antecedentes personales:</strong> {{ historia.antecedentes_personales }}</div>
+    <div class="col-md-6"><strong>Antecedentes familiares:</strong> {{ historia.antecedentes_familiares }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Antecedentes médicos:</strong> {{ historia.antecedentes_medicos }}</div>
+    <div class="col-md-4"><strong>Quirúrgicos:</strong> {{ historia.antecedentes_quirurgicos }}</div>
+    <div class="col-md-4"><strong>Oftalmológicos:</strong> {{ historia.antecedentes_oftalmologicos }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Medicamentos actuales:</strong> {{ historia.medicamentos_actuales }}</div>
+    <div class="col-md-6"><strong>Alergias:</strong> {{ historia.alergias }}</div>
+  </div>
+
+  <!-- SIGNOS VITALES -->
+  <h5 class="mt-4">Signos Vitales</h5>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Tensión arterial:</strong> {{ historia.tension_arterial }}</div>
+    <div class="col-md-6"><strong>Frecuencia cardíaca:</strong> {{ historia.frecuencia_cardiaca }}</div>
+  </div>
+
+  <!-- AGUDEZA VISUAL -->
+  <h5 class="mt-4">Agudeza Visual</h5>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Sin corrección OD:</strong> {{ historia.av_sin_correccion_od }}</div>
+    <div class="col-md-4"><strong>Sin corrección OI:</strong> {{ historia.av_sin_correccion_oi }}</div>
+    <div class="col-md-4"><strong>Con corrección OD:</strong> {{ historia.av_con_correccion_od }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Con corrección OI:</strong> {{ historia.av_con_correccion_oi }}</div>
+    <div class="col-md-4"><strong>Estenopeico OD:</strong> {{ historia.av_estenopeico_od }}</div>
+    <div class="col-md-4"><strong>Estenopeico OI:</strong> {{ historia.av_estenopeico_oi }}</div>
+  </div>
+
+  <!-- REFRACCIÓN -->
+  <h5 class="mt-4">Refracción</h5>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Subjetiva OD:</strong> {{ historia.refraccion_subjetiva_od }}</div>
+    <div class="col-md-4"><strong>Subjetiva OI:</strong> {{ historia.refraccion_subjetiva_oi }}</div>
+    <div class="col-md-4"><strong>Objetiva OD:</strong> {{ historia.refraccion_objetiva_od }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Objetiva OI:</strong> {{ historia.refraccion_objetiva_oi }}</div>
+    <div class="col-md-4"><strong>Final OD:</strong> {{ historia.refraccion_final_od }}</div>
+    <div class="col-md-4"><strong>Final OI:</strong> {{ historia.refraccion_final_oi }}</div>
+  </div>
+
+  <!-- EXAMEN OCULAR -->
+  <h5 class="mt-4">Examen Ocular</h5>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Anexos oculares:</strong> {{ historia.anexos_oculares }}</div>
+    <div class="col-md-4"><strong>Segmento anterior:</strong> {{ historia.segmento_anterior }}</div>
+    <div class="col-md-4"><strong>Segmento posterior:</strong> {{ historia.segmento_posterior }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Pupilas:</strong> {{ historia.pupilas }}</div>
+    <div class="col-md-4"><strong>Motilidad ocular:</strong> {{ historia.motilidad_ocular }}</div>
+    <div class="col-md-4"><strong>Reflejos pupilares:</strong> {{ historia.reflejos_pupilares }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Fondo de ojo:</strong> {{ historia.fondo_de_ojo }}</div>
+    <div class="col-md-3"><strong>P.I.O OD:</strong> {{ historia.presion_intraocular_od }}</div>
+    <div class="col-md-3"><strong>P.I.O OI:</strong> {{ historia.presion_intraocular_oi }}</div>
+  </div>
+
+  <!-- PRUEBAS COMPLEMENTARIAS -->
+  <h5 class="mt-4">Pruebas Complementarias</h5>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Campimetría visual:</strong> {{ historia.campimetria_visual }}</div>
+    <div class="col-md-4"><strong>Test de Ishihara:</strong> {{ historia.vision_colores }}</div>
+    <div class="col-md-4"><strong>Estereopsis:</strong> {{ historia.estereopsis }}</div>
+  </div>
+
+  <!-- DIAGNÓSTICO Y PLAN -->
+  <h5 class="mt-4">Diagnóstico y Plan</h5>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Diagnóstico principal:</strong> {{ historia.diagnostico_principal }}</div>
+    <div class="col-md-6"><strong>Diagnóstico secundario:</strong> {{ historia.diagnostico_secundario }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Código CIE10 principal:</strong> {{ historia.cie10_principal }}</div>
+    {% if historia.diagnosticos_cie10.all %}
+    <div class="col-md-6">
+      <strong>Diagnósticos adicionales:</strong>
+      <ul>
+        {% for cie in historia.diagnosticos_cie10.all %}
+          <li>{{ cie.codigo }} - {{ cie.descripcion }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Plan de tratamiento:</strong> {{ historia.plan_tratamiento }}</div>
+    <div class="col-md-6"><strong>Conducta:</strong> {{ historia.conducta }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-12"><strong>Observaciones:</strong> {{ historia.observaciones }}</div>
+  </div>
+
+  <!-- PROFESIONAL -->
+  <h5 class="mt-4">Profesional</h5>
+  <div class="row mb-3">
+    <div class="col-md-4"><strong>Firmado por:</strong> {{ historia.firmado_por }}</div>
+    <div class="col-md-4"><strong>Especialidad:</strong> {{ historia.especialidad }}</div>
+    <div class="col-md-4"><strong>Registro Médico:</strong> {{ historia.registro_medico }}</div>
+  </div>
+
+</div>
+{% endblock %}

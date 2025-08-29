@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<style>
+  .section-title {
+    font-size: .95rem;
+    font-weight: 700;
+    color: #0d6efd;
+    border-left: 4px solid #0d6efd;
+    padding-left: 10px;
+    margin: 18px 0 12px;
+  }
+  .card-header {
+    background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+  }
+  .form-control, .form-select {
+    border-radius: 10px;
+  }
+  .invalid-feedback {
+    display: block;
+  }
+  .btn-primary {
+    background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+    border: none;
+  }
+  .btn-primary:hover {
+    opacity: .9;
+  }
+</style>
+
+<div class="container mt-4">
+  <div class="card border-0 shadow-lg rounded-4">
+    <div class="card-header text-white py-3 rounded-top-4">
+      <div class="d-flex align-items-center">
+        <i class="bi bi-file-earmark-arrow-up fs-4 me-2"></i>
+        <h5 class="mb-0 fw-bold">Cargar Soporte</h5>
+      </div>
+    </div>
+
+    <div class="card-body bg-light rounded-bottom-4">
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger mb-3">
+          {% for e in form.non_field_errors %}{{ e }}<br>{% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <!-- Información del Soporte -->
+        <div class="section-title">
+          <i class="bi bi-journal-text me-1"></i> Información del Soporte
+        </div>
+        <div class="mb-3">
+          <label for="{{ form.tipo.id_for_label }}" class="form-label fw-semibold">
+            <i class="bi bi-file-text me-1"></i> {{ form.tipo.label }}
+            {% if form.tipo.field.required %}<span class="text-danger">*</span>{% endif %}
+          </label>
+          {{ form.tipo|add_class:"form-select form-select-sm" }}
+          {% for error in form.tipo.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.archivo.id_for_label }}" class="form-label fw-semibold">
+            <i class="bi bi-upload me-1"></i> {{ form.archivo.label }}
+            {% if form.archivo.field.required %}<span class="text-danger">*</span>{% endif %}
+          </label>
+          {{ form.archivo|add_class:"form-control form-control-sm" }}
+          {% for error in form.archivo.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+
+        <div class="mb-4">
+          <label for="{{ form.descripcion.id_for_label }}" class="form-label fw-semibold">
+            <i class="bi bi-card-text me-1"></i> {{ form.descripcion.label }}
+          </label>
+          {{ form.descripcion|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Descripción opcional" }}
+          {% for error in form.descripcion.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-end gap-2">
+          <a href="{% url 'soportes:visor_soporte' numero_control %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Cancelar
+          </a>
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-save"></i> Cargar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}

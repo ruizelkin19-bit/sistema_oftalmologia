@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Factura No. {{ factura.numero_factura }}</h2>
+  <p><strong>Número de control:</strong> {{ factura.numero_control }}</p>
+  <p><strong>Fecha:</strong> {{ factura.fecha|date:"d/m/Y" }}</p>
+
+  <h4>Paciente</h4>
+  <p><strong>Nombre:</strong> {{ paciente.nombre }}</p>
+  <p><strong>Documento:</strong> {{ paciente.numDocumentoIdentificacion }}</p>
+  
+  <h4>Detalles de la factura</h4>
+  <p><strong>Valor consulta:</strong> ${{ factura.valor_consulta|floatformat:2 }}</p>
+  <p><strong>Total:</strong> ${{ factura.total|floatformat:2 }}</p>
+  <p><strong>Forma de pago:</strong> {{ factura.get_forma_pago_display }}</p>
+  
+  <a href="{% url 'facturacion:generar_factura_pdf' factura.id %}" class="btn btn-primary mt-3">
+    <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
+  </a>
+</div>
+{% endblock %}

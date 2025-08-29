@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Agenda disponible para el {{ fecha|date:"l, d \\d\\e F \\d\\e Y" }}</h2>
+
+    {% if horas_disponibles %}
+        <div class="row">
+            {% for hora in horas_disponibles %}
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ hora|time:"H:i" }}</h5>
+                            <a href="{% url 'citas:crear_cita' %}?fecha={{ fecha|date:'Y-m-d' }}&hora={{ hora|time:'H:i' }}" class="btn btn-success btn-sm mt-2">
+                                Agendar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">
+            <strong>No hay horas disponibles para este día.</strong>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

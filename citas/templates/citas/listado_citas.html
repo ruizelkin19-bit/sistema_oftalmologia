@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .btn-equal {
+    height: 36px;
+    font-size: 0.9rem;
+  }
+  .table-hover tbody tr:hover {
+    background-color: #e9f5ff;
+    transition: background-color 0.3s ease;
+  }
+  .table thead {
+    background-color: #0d6efd;
+    color: white;
+  }
+  .table th, .table td {
+    vertical-align: middle !important;
+    font-size: 0.9rem;
+  }
+  .header-section {
+    background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgb(75 108 183 / 0.3);
+    font-size: 1.25rem;
+  }
+  .action-btn {
+    font-size: 0.85rem;
+    padding: 0.3rem 0.6rem;
+    transition: transform 0.15s ease;
+  }
+  .action-btn:hover {
+    transform: scale(1.05);
+  }
+</style>
+
+<div class="container mt-4">
+
+  <div class="header-section d-flex justify-content-between align-items-center flex-wrap">
+      <h2 class="mb-0">📅 {{ titulo }}</h2>
+      <a href="{% url 'citas:agenda_disponible' %}" class="btn btn-light fw-semibold shadow-sm py-1 px-3 mt-2 mt-md-0">Consultar agenda disponible</a>
+  </div>
+
+  <!-- Filtros -->
+  <form method="get" class="card p-3 mb-4 shadow-sm border-0">
+      <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Documento</label>
+              <input type="text" name="documento" 
+                     value="{{ documento|default:'' }}" 
+                     class="form-control form-control-sm" placeholder="Documento">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Fecha inicio</label>
+              <input type="date" name="fecha_inicio" 
+                     value="{{ fecha_inicio|default:'' }}" 
+                     class="form-control form-control-sm">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Fecha fin</label>
+              <input type="date" name="fecha_fin" 
+                     value="{{ fecha_fin|default:'' }}" 
+                     class="form-control form-control-sm">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Estado</label>
+              <select name="estado" class="form-select form-select-sm">
+                  <option value="">Todos</option>
+                  <option value="Agendada" {% if estado_cita == "Agendada" %}selected{% endif %}>Agendada</option>
+                  <option value="Atendida" {% if estado_cita == "Atendida" %}selected{% endif %}>Atendida</option>
+                  <option value="Cancelada" {% if estado_cita == "Cancelada" %}selected{% endif %}>Cancelada</option>
+                  <option value="Facturada" {% if estado_cita == "Facturada" %}selected{% endif %}>Facturada</option>
+              </select>
+          </div>
+          <div class="col-md-3 d-flex gap-2 mt-2">
+              <button type="submit" class="btn btn-primary btn-sm flex-grow-1 shadow-sm btn-equal">Filtrar</button>
+              <a href="{% url 'citas:listado_citas' %}" class="btn btn-outline-secondary btn-sm px-3 shadow-sm btn-equal">Limpiar</a>
+          </div>
+      </div>
+  </form>
+
+  {% if citas %}
+  <div class="table-responsive shadow-sm rounded">
+      <table class="table table-bordered table-hover align-middle mb-0 text-center">
+          <thead>
+              <tr>
+                  <th>Paciente</th>
+                  <th>Documento</th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                  <th>Motivo</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for cita in citas %}
+              <tr>
+                  <td>{{ cita.paciente.nombre }}</td>
+                  <td>{{ cita.paciente.numDocumentoIdentificacion }}</td>
+                  <td>{{ cita.fecha|date:"d/m/Y" }}</td>
+                  <td>{{ cita.hora|time:"H:i" }}</td>
+                  <td>{{ cita.motivo }}</td>
+                  <td>
+                    {% if cita.estado == "Agendada" %}
+                      <span class="badge bg-primary">{{ cita.estado }}</span>
+                    {% elif cita.estado == "Atendida" %}
+                      <span class="badge bg-success">{{ cita.estado }}</span>
+                    {% elif cita.estado == "Cancelada" %}
+                      <span class="badge bg-danger">{{ cita.estado }}</span>
+                    {% else %}
+                      <span class="badge bg-secondary">{{ cita.estado }}</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="btn-group btn-group-sm" role="group">
+                      {% if cita.estado == 'Agendada' %}
+                        <a href="{% url 'citas:editar_cita' cita.id %}" class="btn btn-outline-primary action-btn" title="Editar">✏️</a>
+
+                        <form action="{% url 'citas:cancelar_cita' cita.id %}" method="post" class="d-inline">
+                          {% csrf_token %}
+                          <button type="submit" class="btn btn-outline-danger action-btn" title="Cancelar">❌</button>
+                        </form>
+
+                        <a href="{% url 'citas:admitir_paciente' cita.id %}" class="btn btn-outline-success action-btn" title="Admitir paciente">✔️</a>
+                      {% endif %}
+
+                      {% if cita.factura %}
+                        <a href="{% url 'facturacion:generar_factura_pdf' cita.factura.id %}" target="_blank" class="btn btn-outline-dark action-btn" title="Ver factura">🧾</a>
+                      {% else %}
+                        <button class="btn btn-outline-secondary action-btn" disabled title="Aún no tiene factura">🧾</button>
+                      {% endif %}
+                    </div>
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+  {% else %}
+  <div class="alert alert-warning text-center shadow-sm">
+      No hay citas registradas para los filtros aplicados.
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

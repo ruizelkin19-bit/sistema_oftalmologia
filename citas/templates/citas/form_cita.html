@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Agendar Nueva Cita</h2>
+
+    {% if paciente %}
+        <div class="alert alert-info">
+            <strong>Paciente:</strong> {{ paciente.nombre }} {{ paciente.apellidos }}<br>
+            <strong>Documento:</strong> {{ paciente.documento }}
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            {{ form.documento.label_tag }}
+            {{ form.documento }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.codigo_cups.label_tag }}
+            {{ form.codigo_cups }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.fecha.label_tag }}
+            {{ form.fecha }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.hora.label_tag }}
+            {{ form.hora }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.motivo.label_tag }}
+            {{ form.motivo }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Agendar cita</button>
+    </form>
+</div>
+{% endblock %}

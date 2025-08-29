@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}{{ titulo }}{% endblock %}
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'pacientes:buscar_paciente' %}">Pacientes</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ titulo }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>⚠ Por favor corrige los errores en el formulario.</strong>
+        </div>
+    {% endif %}
+
+    <div class="card shadow-lg p-4">
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="row">
+                {% for field in form %}
+                    {% if field.name == 'departamentoResidencia' %}
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ field.id_for_label }}"><strong>{{ field.label }}</strong></label>
+                            {{ field }}
+                        </div>
+                    {% elif field.name == 'codMunicipioResidencia' %}
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ field.id_for_label }}"><strong>{{ field.label }}</strong></label>
+                            <select id="id_codMunicipioResidencia" name="codMunicipioResidencia" class="form-control">
+                                {% if form.instance.codMunicipioResidencia %}
+                                    <option value="{{ form.instance.codMunicipioResidencia.id }}">{{ form.instance.codMunicipioResidencia }}</option>
+                                {% else %}
+                                    <option value="">Seleccione un municipio</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    {% elif field.name == 'ingreso_salarios_minimos' %}
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ field.id_for_label }}"><strong>{{ field.label }}</strong></label>
+                            <input type="number" class="form-control" value="{{ field.value }}" readonly>
+                        </div>
+                    {% else %}
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ field.id_for_label }}"><strong>{{ field.label }}</strong></label>
+                            {{ field.as_widget|safe }}
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-success">💾 Guardar</button>
+                <a href="{% url 'pacientes:buscar_paciente' %}" class="btn btn-secondary">↩ Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- AJAX para cargar municipios según departamento -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const departamentoSelect = document.getElementById("id_departamentoResidencia");
+        const municipioSelect = document.getElementById("id_codMunicipioResidencia");
+
+        departamentoSelect.addEventListener("change", function () {
+            const departamentoId = this.value;
+
+            municipioSelect.innerHTML = '<option value="">Cargando municipios...</option>';
+
+            fetch(`/pacientes/ajax/cargar-municipios/?departamento=${departamentoId}`)
+                .then(response => response.json())
+                .then(data => {
+                    municipioSelect.innerHTML = '<option value="">Seleccione un municipio</option>';
+                    data.forEach(function (municipio) {
+                        const option = document.createElement("option");
+                        option.value = municipio.id;
+                        option.textContent = municipio.nombre;
+                        municipioSelect.appendChild(option);
+                    });
+                });
+        });
+    });
+</script>
+{% endblock %}

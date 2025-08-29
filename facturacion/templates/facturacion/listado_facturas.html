@@ -1,0 +1,154 @@
+### Archivo: `listado_facturas.html`
+
+El único cambio necesario en tu plantilla es la URL del botón **"Nueva factura"**. Aquí está el código completo y ajustado:
+
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.btn-equal {
+  height: 36px;
+  font-size: 0.9rem;
+}
+.table-hover tbody tr:hover {
+  background-color: #e9f5ff;
+  transition: background-color 0.3s ease;
+}
+.table thead {
+  background-color: #0d6efd;
+  color: white;
+}
+.table th, .table td {
+  vertical-align: middle !important;
+  font-size: 0.9rem;
+}
+.header-section {
+  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgb(75 108 183 / 0.3);
+  font-size: 1.25rem;
+}
+.action-btn {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  transition: transform 0.15s ease;
+}
+.action-btn:hover {
+  transform: scale(1.05);
+}
+</style>
+
+<div class="container mt-4">
+
+  <div class="header-section d-flex justify-content-between align-items-center flex-wrap">
+      <h2 class="mb-0">🧾 Listado de Facturas</h2>
+      <a href="{% url 'facturacion:buscar_cita' %}" class="btn btn-light">
+        Nueva factura
+      </a>
+
+  </div>
+
+  <form method="get" class="card p-3 mb-4 shadow-sm border-0">
+      <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Documento</label>
+              <input type="text" name="documento" 
+                      value="{{ documento|default:'' }}" 
+                      class="form-control form-control-sm" placeholder="Documento paciente">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Desde</label>
+              <input type="date" name="fecha_inicio" value="{{ fecha_inicio|default:'' }}" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Hasta</label>
+              <input type="date" name="fecha_fin" value="{{ fecha_fin|default:'' }}" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-3 d-flex align-items-end gap-2">
+              <button type="submit" class="btn btn-primary btn-sm flex-grow-1 shadow-sm btn-equal">Filtrar</button>
+              <a href="{% url 'facturacion:listado_facturas' %}" class="btn btn-outline-secondary btn-sm px-3 shadow-sm">Limpiar</a>
+          </div>
+      </div>
+  </form>
+
+  {% if facturas %}
+  <div class="table-responsive shadow-sm rounded">
+      <table class="table table-bordered table-hover align-middle mb-0">
+          <thead>
+              <tr>
+                  <th style="min-width:100px;">Número Factura</th>
+                  <th style="min-width:120px;">Número Control</th>
+                  <th style="min-width:150px;">Paciente</th>
+                  <th style="min-width:110px;">Documento</th>
+                  <th style="min-width:110px;">Fecha</th>
+                  <th style="min-width:100px;">Total</th>
+                  <th style="min-width:140px;" class="text-center">Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for factura in facturas %}
+              <tr>
+                  <td class="fw-semibold text-primary">{{ factura.numero_factura }}</td>
+                  <td>{{ factura.numero_control }}</td>
+                  <td>{{ factura.paciente.nombre }}</td>
+                  <td>{{ factura.paciente.numDocumentoIdentificacion }}</td>
+                  <td>{{ factura.fecha|date:"d/m/Y" }}</td>
+                  <td>${{ factura.total|floatformat:2 }}</td>
+                  <td class="text-center">
+                      <a href="{% url 'facturacion:detalle_factura' factura.id %}" 
+                          class="btn btn-sm btn-outline-info action-btn" title="Ver detalle">
+                          Ver
+                      </a>
+                      <a href="{% url 'facturacion:generar_factura_pdf' factura.id %}" 
+                          target="_blank" 
+                          class="btn btn-sm btn-outline-danger action-btn" title="Descargar PDF">
+                          PDF
+                      </a>
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+  <nav>
+    <ul class="pagination justify-content-center mt-3">
+      {% if facturas.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ facturas.previous_page_number }}&documento={{ documento }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}">Anterior</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+      {% endif %}
+
+      {% for num in facturas.paginator.page_range %}
+        {% if facturas.number == num %}
+          <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+        {% elif num > facturas.number|add:'-3' and num < facturas.number|add:'3' %}
+          <li class="page-item"><a class="page-link" href="?page={{ num }}&documento={{ documento }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}">{{ num }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if facturas.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ facturas.next_page_number }}&documento={{ documento }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}">Siguiente</a>
+      </li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  {% else %}
+  <div class="alert alert-warning text-center fs-6">
+      No hay facturas registradas.
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+```

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .header-section {
+    background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgb(75 108 183 / 0.3);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .info-card {
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.1);
+    border-radius: 0.5rem;
+  }
+  .info-card .card-header {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #0d6efd;
+    font-size: 1.1rem;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+  .info-list strong {
+    width: 160px;
+    display: inline-block;
+  }
+  .btn-group .btn {
+    transition: transform 0.2s ease;
+  }
+  .btn-group .btn:hover {
+    transform: scale(1.1);
+  }
+  .no-cita-alert {
+    font-size: 0.95rem;
+  }
+</style>
+
+<div class="container mt-4">
+
+  <div class="header-section d-flex justify-content-between align-items-center flex-wrap">
+    <div>🔍 Buscar Paciente</div>
+    <a href="{% url 'pacientes:crear_paciente' %}" class="btn btn-light fw-semibold shadow-sm py-1 px-3 mt-2 mt-md-0">
+      <i class="bi bi-person-plus"></i> Nuevo Paciente
+    </a>
+  </div>
+
+  <!-- Formulario de búsqueda -->
+  <form method="GET" action="{% url 'pacientes:buscar_paciente' %}" class="row g-3 mb-4 shadow-sm p-3 rounded bg-white">
+    <div class="col-md-8">
+      <input type="text" name="documento" class="form-control form-control-lg" placeholder="Número de documento" value="{{ request.GET.documento }}" required autofocus>
+    </div>
+    <div class="col-md-4 d-flex align-items-center">
+      <button type="submit" class="btn btn-primary btn-lg w-100">
+        <i class="bi bi-search"></i> Buscar
+      </button>
+    </div>
+  </form>
+
+  {% if paciente %}
+    <div class="card info-card mb-4">
+      <div class="card-header">
+        🧾 Información del Paciente
+      </div>
+      <div class="card-body">
+        <div class="row gy-4">
+          <!-- Datos paciente -->
+          <div class="col-md-6 border-md-end">
+            <h4 class="text-uppercase text-primary fw-bold">{{ paciente.nombre }}</h4>
+            <ul class="list-unstyled info-list">
+              <li><strong>Documento:</strong> {{ paciente.numDocumentoIdentificacion }}</li>
+              <li><strong>Tipo Documento:</strong> {{ paciente.get_tipoDocumentoIdentificacion_display }}</li>
+              <li><strong>Teléfono:</strong> {{ paciente.telefono }}</li>
+              <li><strong>Correo:</strong> {{ paciente.correo }}</li>
+              <li><strong>Fecha de nacimiento:</strong> {{ paciente.fechaNacimiento|date:"d/m/Y" }}</li>
+              <li><strong>Sexo:</strong> {{ paciente.get_codSexo_display }}</li>
+              <li><strong>País de residencia:</strong> {{ paciente.codPaisResidencia }}</li>
+              <li><strong>Municipio de residencia:</strong> {{ paciente.codMunicipioResidencia }}</li>
+            </ul>
+            <a href="{% url 'pacientes:editar_paciente' paciente.pk %}" class="btn btn-outline-warning mt-3 shadow-sm">
+              <i class="bi bi-pencil-square"></i> Consultar / Editar
+            </a>
+          </div>
+
+          <!-- Próxima cita -->
+          <div class="col-md-6">
+            <h4 class="text-success fw-semibold mb-3">🗓 Próxima Cita</h4>
+
+            {% if cita %}
+              <div class="border rounded p-3 bg-light shadow-sm">
+                <p><strong>Procedimiento:</strong> {{ cita.codigo_cups.nombre }}</p>
+                <p><strong>Fecha:</strong> {{ cita.fecha|date:"d/m/Y" }}</p>
+                <p><strong>Hora:</strong> {{ cita.hora|time:"H:i" }}</p>
+              </div>
+
+              <div class="btn-group mt-3" role="group" aria-label="Acciones cita">
+                {% if cita.factura and cita.factura.numero_control %}
+                  <a href="{% url 'admisiones:crear_admision' %}?cita_id={{ cita.id }}&control={{ cita.factura.numero_control }}" class="btn btn-success shadow-sm">
+                    <i class="bi bi-person-check"></i> Admitir paciente
+                  </a>
+                {% else %}
+                  <button class="btn btn-outline-secondary shadow-sm" disabled>
+                    <i class="bi bi-person-check"></i> Admitir paciente
+                  </button>
+                {% endif %}
+
+                {% if not cita.factura %}
+                  <a href="{% url 'facturacion:facturar_cita' cita.id %}" class="btn btn-primary shadow-sm">
+                    <i class="bi bi-receipt"></i> Facturar
+                  </a>
+                {% else %}
+                  <button class="btn btn-outline-secondary shadow-sm" disabled>
+                    <i class="bi bi-receipt"></i> Ya facturada
+                  </button>
+                {% endif %}
+              </div>
+
+            {% else %}
+              <div class="alert alert-warning no-cita-alert">
+                Este paciente no tiene una cita registrada.
+              </div>
+              <button class="btn btn-outline-secondary shadow-sm" disabled>
+                <i class="bi bi-calendar-x"></i> Sin cita agendada
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% elif request.GET.documento %}
+    <div class="alert alert-danger text-center shadow-sm mt-4">
+      <i class="bi bi-exclamation-circle"></i> No se encontró un paciente con ese documento.
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

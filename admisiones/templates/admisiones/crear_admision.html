@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<style>
+  .section-title{
+    font-size:.96rem;font-weight:700;color:#0d6efd;border-left:4px solid #0d6efd;
+    padding-left:10px;margin:18px 0 12px
+  }
+  .card-header{background:linear-gradient(90deg,#0d6efd,#0b5ed7)}
+  .form-control,.form-select{border-radius:10px}
+  .invalid-feedback{display:block}
+  .btn-success{background:linear-gradient(90deg,#198754,#28a745);border:none}
+  .btn-success:hover{opacity:.92}
+</style>
+
+<div class="container mt-4">
+  <div class="card border-0 shadow-lg rounded-4">
+    <div class="card-header text-white py-3 rounded-top-4">
+      <div class="d-flex align-items-center">
+        <i class="bi bi-journal-plus fs-4 me-2"></i>
+        <h5 class="mb-0 fw-bold">Crear Admisión</h5>
+      </div>
+    </div>
+
+    <div class="card-body bg-light rounded-bottom-4">
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger mb-3">
+          {% for e in form.non_field_errors %}{{ e }}<br>{% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="POST" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <!-- Información del Paciente -->
+        <div class="section-title">
+          <i class="bi bi-person-badge me-1"></i> Información del Paciente
+        </div>
+        <div class="row g-3 mb-3">
+
+          <!-- Paciente -->
+          <div class="col-lg-4">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-person me-1"></i> Paciente <span class="text-danger">*</span>
+            </label>
+            {{ form.paciente.as_hidden }}
+            <input type="text" class="form-control form-control-sm" 
+                   value="{{ cita.paciente.nombre }} {{ cita.paciente.apellido }}" readonly>
+          </div>
+
+          <!-- Tipo de Usuario -->
+          <div class="col-lg-4">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-people me-1"></i> Tipo de Usuario
+            </label>
+            <input type="text" class="form-control form-control-sm" 
+                   value="{{ cita.paciente.get_tipoUsuario_display }}" readonly>
+          </div>
+
+          <!-- Régimen -->
+          <div class="col-lg-4">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-file-earmark me-1"></i> Régimen
+            </label>
+            <input type="text" class="form-control form-control-sm" 
+                   value="{{ cita.paciente.get_regimen_display }}" readonly>
+          </div>
+        </div>
+
+        <!-- Cita -->
+<div class="row g-3 mb-3">
+  <div class="col-lg-12">
+    <label class="form-label fw-semibold">
+      <i class="bi bi-calendar-event me-1"></i> Cita <span class="text-danger">*</span>
+    </label>
+    {{ form.cita.as_hidden }}
+    <input type="text" class="form-control form-control-sm"
+           value="{{ cita }}{% if cita.cups %} - {{ cita.cups.nombre|truncatechars:30 }}{% endif %}" readonly>
+  </div>
+</div>
+
+
+        <!-- Datos Administrativos -->
+        <div class="section-title">
+          <i class="bi bi-building me-1"></i> Datos Administrativos
+        </div>
+        <div class="row g-3 mb-3">
+          <!-- Entidad Responsable -->
+          <div class="col-lg-6">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-hospital me-1"></i> {{ form.entidad_responsable.label }}
+            </label>
+            {{ form.entidad_responsable|add_class:"form-control form-control-sm"|attr:"placeholder:EPS/Entidad" }}
+          </div>
+
+          <!-- Número Autorización -->
+          <div class="col-lg-6">
+            <label class="form-label fw-semibold">
+              <i class="bi bi-file-earmark-check me-1"></i> {{ form.numero_autorizacion.label }}
+            </label>
+            {{ form.numero_autorizacion|add_class:"form-control form-control-sm"|attr:"placeholder:Número de autorización" }}
+          </div>
+        </div>
+
+        <!-- Motivo de la Consulta -->
+        <div class="section-title">
+          <i class="bi bi-chat-left-text me-1"></i> Motivo de la Consulta
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-semibold">{{ form.motivo_consulta.label }}</label>
+          {{ form.motivo_consulta|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Describa el motivo de la consulta" }}
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-end gap-2">
+          <a href="{% url 'admisiones:listado_admisiones' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Cancelar
+          </a>
+          <button type="submit" class="btn btn-success px-4">
+            <i class="bi bi-save"></i> Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+{% endblock %}

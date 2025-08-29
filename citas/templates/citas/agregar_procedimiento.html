@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Agregar Procedimiento a Cita {{ cita.id }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  <label for="procedimiento_id">Procedimiento:</label>
+  <select name="procedimiento_id" required>
+    {% for proc in procedimientos %}
+      <option value="{{ proc.id }}">{{ proc.codigo }} - {{ proc.descripcion }}</option>
+    {% endfor %}
+  </select><br><br>
+
+  <label for="cantidad">Cantidad:</label>
+  <input type="number" name="cantidad" value="1" min="1"><br><br>
+
+  <button type="submit">Agregar</button>
+</form>
+
+<a href="{% url 'detalle_cita' cita.id %}">Volver a la cita</a>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Admisión registrada</h2>
+
+<p><strong>Paciente:</strong> {{ admision.paciente }}</p>
+<p><strong>Tipo de usuario:</strong> {{ admision.paciente.get_tipoUsuario_display }}</p>
+
+<p><strong>Cita:</strong> 
+    {{ admision.cita.cups.nombre }} <br>
+    <small>ID: {{ admision.cita.id }}</small>
+</p>
+
+<p><strong>Estado:</strong> {{ admision.estado }}</p>
+<p><strong>Fecha de admisión:</strong> {{ admision.fecha_admision }}</p>
+
+<a href="{% url 'admisiones:listado_admisiones' %}" class="btn btn-primary">Volver a admisiones de hoy</a>
+{% endblock %}

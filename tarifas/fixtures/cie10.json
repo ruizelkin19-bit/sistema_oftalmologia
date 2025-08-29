@@ -1,0 +1,42 @@
+[
+  {
+    "model": "tarifas.cie10",
+    "pk": 1,
+    "fields": {
+      "codigo": "H524",
+      "descripcion": "Presbicia"
+    }
+  },
+  {
+    "model": "tarifas.cie10",
+    "pk": 2,
+    "fields": {
+      "codigo": "H521",
+      "descripcion": "Miopía"
+    }
+  },
+  {
+    "model": "tarifas.cie10",
+    "pk": 3,
+    "fields": {
+      "codigo": "H522",
+      "descripcion": "Hipermetropía"
+    }
+  },
+  {
+    "model": "tarifas.cie10",
+    "pk": 4,
+    "fields": {
+      "codigo": "H250",
+      "descripcion": "Catarata senil incipiente"
+    }
+  },
+  {
+    "model": "tarifas.cie10",
+    "pk": 5,
+    "fields": {
+      "codigo": "H400",
+      "descripcion": "Glaucoma primario de ángulo abierto"
+    }
+  }
+]

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Agenda semanal ({{ start_date|date:"d M Y" }} - {{ end_date|date:"d M Y" }})</h2>
+
+  <div class="d-flex justify-content-between mb-3">
+    <a href="?start_date={{ start_date|date:"Y-m-d"|add:"-7 days" }}" class="btn btn-outline-primary">← Semana anterior</a>
+    <a href="?start_date={{ start_date|date:"Y-m-d"|add:"7 days" }}" class="btn btn-outline-primary">Semana siguiente →</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-bordered text-center align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Hora</th>
+          {% for i in "0123456"|make_list %}
+            {% with fecha=start_date|add:i|date:"Y-m-d" %}
+              <th>{{ start_date|add:i|date:"D d" }}</th>
+            {% endwith %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in agenda %}
+        <tr>
+          <th>{{ fila.hora|time:"H:i" }}</th>
+          {% for dia in fila.dias %}
+            {% if dia.cita %}
+              <td class="bg-danger text-white fw-bold">
+                {{ dia.cita.paciente.nombre }}<br>
+                (Agendado)
+              </td>
+            {% else %}
+              <td class="bg-success text-white">
+                <a href="{% url 'crear_cita' %}?fecha={{ dia.fecha }}&hora={{ fila.hora|time:"H:i" }}" class="text-white">
+                  Disponible
+                </a>
+              </td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

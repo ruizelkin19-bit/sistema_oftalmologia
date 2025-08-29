@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Productos</title>
+</head>
+<body>
+    <h1>Listado de Productos</h1>
+    <ul>
+        {% for producto in productos %}
+        <li>{{ producto.nombre }} - ${{ producto.precio }} ({{ producto.cantidad }} unidades)</li>
+        {% empty %}
+        <li>No hay productos registrados.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

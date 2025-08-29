@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Ficha del Paciente{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center text-primary mb-4">FICHA MÉDICA DEL PACIENTE</h2>
+
+  <div class="card shadow rounded-4 border-0 p-4">
+    <!-- Información básica -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Nombre completo:</strong> {{ paciente.nombre }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Documento:</strong> {{ paciente.numDocumentoIdentificacion }}</div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Fecha de nacimiento:</strong> {{ paciente.fechaNacimiento }} (Edad: {{ paciente.edad }})</div>
+      </div>
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Género:</strong> {{ paciente.codSexo }}</div>
+      </div>
+    </div>
+
+    <!-- Información de contacto -->
+    <h5 class="bg-light p-2 mt-4">Información de Contacto</h5>
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Teléfono:</strong> {{ paciente.telefono }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Correo:</strong> {{ paciente.correo }}</div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Dirección:</strong> {{ paciente.direccion }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Ocupación:</strong> {{ paciente.ocupacion }}</div>
+      </div>
+    </div>
+
+    <!-- Datos médicos / salud -->
+    <h5 class="bg-light p-2 mt-4">Datos Médicos</h5>
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="border p-2"><strong>EPS / Régimen:</strong> {{ paciente.regimen }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Tipo de usuario:</strong> {{ paciente.tipoUsuario }}</div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Nivel de ingresos:</strong> {{ paciente.nivel }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Ingreso aproximado (SM):</strong> {{ paciente.ingreso_salarios_minimos }}</div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Clase de servicio:</strong> {{ paciente.clase_servicio }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="border p-2"><strong>Tipo de sangre:</strong> {{ paciente.tipo_sangre }}</div>
+      </div>
+    </div>
+
+    <!-- Observaciones -->
+    <h5 class="bg-light p-2 mt-4">Observaciones</h5>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="border p-3" style="min-height: 100px;">{{ paciente.observaciones }}</div>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="text-end mt-4">
+      <a href="{% url 'pacientes:editar_paciente' paciente.pk %}" class="btn btn-warning">Editar</a>
+      <a href="{% url 'pacientes:buscar_paciente' %}" class="btn btn-secondary">Volver</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

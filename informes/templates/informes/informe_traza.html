@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Informe Completo - Control {{ historia.numero_control }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>Informe Completo - Número de Control: {{ historia.numero_control }}</h1>
+
+  <section>
+    <h3>Paciente</h3>
+    <ul>
+      <li>Nombre: {{ historia.paciente.nombre }}</li>
+      <li>Documento: {{ historia.paciente.numDocumentoIdentificacion }}</li>
+      <li>Fecha nacimiento: {{ historia.paciente.fecha_nacimiento }}</li>
+      <li>Dirección: {{ historia.paciente.direccion }}</li>
+      <!-- Agrega más campos si quieres -->
+    </ul>
+  </section>
+
+  <section>
+    <h3>Cita</h3>
+    <ul>
+      <li>Fecha: {{ historia.cita.fecha }}</li>
+      <li>Estado: {{ historia.cita.estado }}</li>
+      <li>Hora: {{ historia.cita.hora }}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Admisión</h3>
+    <ul>
+      <li>Número Control: {{ historia.admision.numero_control }}</li>
+      <li>Estado: {{ historia.admision.estado }}</li>
+      <li>Fecha ingreso: {{ historia.admision.fecha_ingreso }}</li>
+    </ul>
+  </section>
+
+  <section>
+    <h3>Factura</h3>
+    {% if factura %}
+    <ul>
+      <li>Número factura: {{ factura.numero_factura }}</li>
+      <li>Valor: {{ factura.valor }}</li>
+      <li>Fecha: {{ factura.fecha }}</li>
+      <li>Estado: {{ factura.estado }}</li>
+    </ul>
+    {% else %}
+    <p>No hay factura registrada.</p>
+    {% endif %}
+  </section>
+
+  <section>
+    <h3>Historia Clínica</h3>
+    <ul>
+      <li>Fecha registro: {{ historia.fecha }}</li>
+      <li>Ocupación: {{ historia.ocupacion }}</li>
+      <li>Motivo consulta: {{ historia.motivo_consulta }}</li>
+      <li>Diagnóstico principal: {{ historia.diagnostico_principal }}</li>
+      <li>Plan tratamiento: {{ historia.plan_tratamiento }}</li>
+      <!-- Agrega más campos relevantes aquí -->
+    </ul>
+  </section>
+
+  <a href="{% url 'informes:listado_informes' %}" class="btn btn-secondary mt-3">Volver a informes</a>
+</div>
+{% endblock %}

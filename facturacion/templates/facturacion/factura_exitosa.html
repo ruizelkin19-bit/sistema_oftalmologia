@@ -1,0 +1,6 @@
+<h2>Factura de venta No: {{ factura.numero_factura }}</h2>
+<p><strong>Paciente:</strong> {{ factura.paciente.nombre }}</p>
+<p><strong>Total facturado:</strong> ${{ factura.total }}</p>
+<p><strong>Número de control interno:</strong> {{ factura.numero_control }}</p>
+
+<a href="{% url 'facturacion:facturar_cita' factura.cita.id %}" class="btn btn-primary mt-3">Volver</a>

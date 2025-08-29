@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Tarifa</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body class="container mt-4">
+    <h2 class="mb-4">{% if form.instance.pk %}Editar{% else %}Nueva{% endif %} Tarifa</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_codigo" class="form-label">Código Procedimiento (SOAT/ISS)</label>
+            {{ form.codigo|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="id_nombre" class="form-label">Nombre del Procedimiento</label>
+            {{ form.nombre|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="id_valor" class="form-label">Valor en Pesos (COP)</label>
+            {{ form.valor|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+            <label for="id_descripcion" class="form-label">Descripción (opcional)</label>
+            {{ form.descripcion|add_class:"form-control" }}
+        </div>
+        <div class="mb-3 form-check">
+            {{ form.activo }}
+            <label for="id_activo" class="form-check-label">Activo</label>
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a href="{% url 'listar_tarifas' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</body>
+</html>

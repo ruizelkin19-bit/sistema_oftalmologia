@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Soportes del Número de Control: {{ numero_control.numero_control }}</h2>
+    <p><strong>Paciente:</strong> {{ numero_control.paciente.nombre }}</p>
+    <p><strong>Fecha de creación:</strong> {{ numero_control.fecha_creacion|date:"d/m/Y H:i" }}</p>
+
+    <a href="{% url 'soportes:cargar_soporte' numero_control.id %}" class="btn btn-success mb-3">
+        + Agregar soporte
+    </a>
+
+    {% if soportes %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tipo de Soporte</th>
+                    <th>Archivo</th>
+                    <th>Observaciones</th>
+                    <th>Fecha de Carga</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for soporte in soportes %}
+                <tr>
+                    <td>{{ soporte.tipo }}</td>
+                    <td>
+                        <a href="{{ soporte.archivo.url }}" target="_blank">Ver archivo</a>
+                    </td>
+                    <td>{{ soporte.observaciones }}</td>
+                    <td>{{ soporte.fecha_carga }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning">No hay soportes registrados para este número de control.</div>
+    {% endif %}
+</div>
+{% endblock %}

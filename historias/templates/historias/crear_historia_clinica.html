@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Registrar Historia Clínica Oftalmológica</h2>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.errors %}
+                <div class="alert alert-danger">
+                    {{ field.label }}: {{ field.errors|striptags }}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Motivo y antecedentes -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <strong>Motivo y antecedentes</strong>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.motivo_consulta.label_tag }} {{ form.motivo_consulta }}
+                </div>
+                <div class="mb-3">
+                    {{ form.antecedentes_personales.label_tag }} {{ form.antecedentes_personales }}
+                </div>
+                <div class="mb-3">
+                    {{ form.antecedentes_familiares.label_tag }} {{ form.antecedentes_familiares }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Agudeza visual -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <strong>Agudeza visual</strong>
+            </div>
+            <div class="card-body row">
+                <div class="col-md-4 mb-3">
+                    {{ form.agudeza_visual_od.label_tag }} {{ form.agudeza_visual_od }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.agudeza_visual_oi.label_tag }} {{ form.agudeza_visual_oi }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.agudeza_visual_sin_correccion.label_tag }} {{ form.agudeza_visual_sin_correccion }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Refracción -->
+        <div class="card mb-4">
+            <div class="card-header bg-secondary text-white">
+                <strong>Refracción</strong>
+            </div>
+            <div class="card-body row">
+                <div class="col-md-6 mb-3">
+                    {{ form.refraccion_od.label_tag }} {{ form.refraccion_od }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.refraccion_oi.label_tag }} {{ form.refraccion_oi }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Examen ocular -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <strong>Examen ocular</strong>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.segmento_anterior.label_tag }} {{ form.segmento_anterior }}
+                </div>
+                <div class="mb-3">
+                    {{ form.segmento_posterior.label_tag }} {{ form.segmento_posterior }}
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        {{ form.presion_intraocular_od.label_tag }} {{ form.presion_intraocular_od }}
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        {{ form.presion_intraocular_oi.label_tag }} {{ form.presion_intraocular_oi }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagnóstico y conducta -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning">
+                <strong>Diagnóstico y conducta</strong>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.diagnostico.label_tag }} {{ form.diagnostico }}
+                </div>
+                <div class="mb-3">
+                    {{ form.conducta.label_tag }} {{ form.conducta }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <strong>Observaciones adicionales</strong>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form.observaciones.label_tag }} {{ form.observaciones }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón Guardar -->
+        <div class="text-end">
+            <button type="submit" class="btn btn-success">Guardar Historia Clínica</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

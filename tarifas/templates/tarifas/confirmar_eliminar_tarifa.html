@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Tarifa</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body class="container mt-4">
+    <h3>¿Está seguro de que desea eliminar la siguiente tarifa?</h3>
+
+    <ul>
+        <li><strong>Código:</strong> {{ tarifa.codigo }}</li>
+        <li><strong>Nombre:</strong> {{ tarifa.nombre }}</li>
+        <li><strong>Valor:</strong> ${{ tarifa.valor }}</li>
+    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url 'listar_tarifas' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</body>
+</html>

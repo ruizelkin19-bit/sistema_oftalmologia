@@ -1,0 +1,12 @@
+<!-- templates/pacientes/listado_citas.html -->
+<h1>Listado de Citas</h1>
+
+<a href="{% url 'crear_cita' %}">Crear nueva cita</a>
+
+<ul>
+    {% for cita in citas %}
+        <li>{{ cita.fecha }} {{ cita.hora }} - {{ cita.paciente.nombre }}</li>
+    {% empty %}
+        <li>No hay citas registradas.</li>
+    {% endfor %}
+</ul>

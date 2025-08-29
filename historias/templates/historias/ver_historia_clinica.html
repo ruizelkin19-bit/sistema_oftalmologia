@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-primary mb-4">Historia Clínica Oftalmológica</h2>
+
+  <!-- Mensajes del sistema -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Errores generales -->
+  {% if form.errors %}
+    <div class="alert alert-danger">
+      <strong>Por favor corrige los errores en el formulario.</strong>
+    </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    <!-- DATOS DEL PACIENTE -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Datos del Paciente</h5>
+    </div>
+    <div class="card-body">
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <strong>Nombre:</strong> {{ paciente.nombre }}
+            </div>
+            <div class="col-md-4">
+                <strong>Documento:</strong> {{ paciente.numDocumentoIdentificacion }}
+            </div>
+            <div class="col-md-4">
+                <strong>Sexo:</strong> {{ paciente.get_codSexo_display }}
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <strong>Fecha de nacimiento:</strong> {{ paciente.fechaNacimiento }}
+            </div>
+            <div class="col-md-4">
+                <strong>Edad:</strong> {{ paciente.edad }}
+            </div>
+            <div class="col-md-4">
+                <strong>Teléfono:</strong> {{ paciente.telefono }}
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <strong>Correo:</strong> {{ paciente.correo }}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- Campo con errores -->
+    {% for field in form %}
+      {% if field.errors %}
+        <div class="alert alert-danger">
+          <strong>{{ field.label }}:</strong> {{ field.errors|striptags }}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% comment %} BLOQUES CON CAMPOS {% endcomment %}
+    {% with "form-control" as base_class %}
+
+   <!-- DATOS GENERALES -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Datos Generales</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label><strong>Ocupación:</strong></label>
+        {% render_field form.ocupacion class=base_class %}
+      </div>
+      <div class="col-md-4 mb-3">
+        <label><strong>Dirección:</strong></label>
+        {% render_field form.direccion class=base_class %}
+      </div>
+      <div class="col-md-4 mb-3">
+        <label><strong>Teléfono:</strong></label>
+        {% render_field form.telefono class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+   <!-- MOTIVO Y ANTECEDENTES -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Motivo y Antecedentes</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Motivo de Consulta:</strong></label>
+        {% render_field form.motivo_consulta class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Enfermedad Actual:</strong></label>
+        {% render_field form.enfermedad_actual class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Antecedentes Personales:</strong></label>
+        {% render_field form.antecedentes_personales class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Antecedentes Familiares:</strong></label>
+        {% render_field form.antecedentes_familiares class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Antecedentes Médicos:</strong></label>
+        {% render_field form.antecedentes_medicos class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Antecedentes Quirúrgicos:</strong></label>
+        {% render_field form.antecedentes_quirurgicos class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Antecedentes Oftalmológicos:</strong></label>
+        {% render_field form.antecedentes_oftalmologicos class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Medicamentos Actuales:</strong></label>
+        {% render_field form.medicamentos_actuales class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Alergias:</strong></label>
+        {% render_field form.alergias class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNOS VITALES -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Signos Vitales</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Tensión Arterial:</strong></label>
+        {% render_field form.tension_arterial class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Frecuencia Cardíaca:</strong></label>
+        {% render_field form.frecuencia_cardiaca class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGUDEZA VISUAL -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Agudeza Visual</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>AV sin corrección OD:</strong></label>
+        {% render_field form.av_sin_correccion_od class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>AV sin corrección OI:</strong></label>
+        {% render_field form.av_sin_correccion_oi class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>AV con corrección OD:</strong></label>
+        {% render_field form.av_con_correccion_od class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>AV con corrección OI:</strong></label>
+        {% render_field form.av_con_correccion_oi class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>AV estenopeico OD:</strong></label>
+        {% render_field form.av_estenopeico_od class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>AV estenopeico OI:</strong></label>
+        {% render_field form.av_estenopeico_oi class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- REFRACCIÓN -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Refracción</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Subjetiva OD:</strong></label>
+        {% render_field form.refraccion_subjetiva_od class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Subjetiva OI:</strong></label>
+        {% render_field form.refraccion_subjetiva_oi class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Objetiva OD:</strong></label>
+        {% render_field form.refraccion_objetiva_od class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Objetiva OI:</strong></label>
+        {% render_field form.refraccion_objetiva_oi class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Final OD:</strong></label>
+        {% render_field form.refraccion_final_od class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Final OI:</strong></label>
+        {% render_field form.refraccion_final_oi class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXAMEN OCULAR -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Examen Ocular</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Anexos oculares:</strong></label>
+        {% render_field form.anexos_oculares class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Segmento anterior:</strong></label>
+        {% render_field form.segmento_anterior class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Segmento posterior:</strong></label>
+        {% render_field form.segmento_posterior class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Pupilas:</strong></label>
+        {% render_field form.pupilas class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Motilidad ocular:</strong></label>
+        {% render_field form.motilidad_ocular class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Reflejos pupilares:</strong></label>
+        {% render_field form.reflejos_pupilares class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Fondo de ojo:</strong></label>
+        {% render_field form.fondo_de_ojo class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>PIO OD:</strong></label>
+        {% render_field form.presion_intraocular_od class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>PIO OI:</strong></label>
+        {% render_field form.presion_intraocular_oi class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRUEBAS COMPLEMENTARIAS -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Pruebas Complementarias</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Campimetría visual:</strong></label>
+        {% render_field form.campimetria_visual class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Visión de colores (Ishihara):</strong></label>
+        {% render_field form.vision_colores class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Estereopsis:</strong></label>
+        {% render_field form.estereopsis class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DIAGNÓSTICO -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Diagnóstico y Plan</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Diagnóstico principal:</strong></label>
+        {% render_field form.diagnostico_principal class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Diagnóstico secundario:</strong></label>
+        {% render_field form.diagnostico_secundario class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>CIE10 principal:</strong></label>
+        {% render_field form.cie10_principal class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Diagnósticos adicionales:</strong></label>
+        {% render_field form.diagnosticos_cie10 class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Plan de tratamiento:</strong></label>
+        {% render_field form.plan_tratamiento class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Conducta:</strong></label>
+        {% render_field form.conducta class=base_class %}
+      </div>
+      <div class="col-md-12 mb-3">
+        <label><strong>Observaciones:</strong></label>
+        {% render_field form.observaciones class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFESIONAL -->
+<div class="card mb-3">
+  <div class="card-header bg-light"><strong>Profesional</strong></div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label><strong>Nombre:</strong></label>
+        {% render_field form.firmado_por class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Especialidad:</strong></label>
+        {% render_field form.especialidad class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Registro Médico:</strong></label>
+        {% render_field form.registro_medico class=base_class %}
+      </div>
+      <div class="col-md-6 mb-3">
+        <label><strong>Firma digital:</strong></label>
+        {% render_field form.firma_digital class=base_class %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTÓN GUARDAR -->
+<div class="text-end mt-4">
+  <button type="submit" class="btn btn-success btn-lg">Guardar Cambios</button>
+</div>
+
+
+    {% endwith %}
+  </form>
+</div>
+{% endblock %}

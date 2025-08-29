@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Facturar cita del día</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} mb-3">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">Datos de la factura</div>
+    <div class="card-body">
+
+      <!-- Datos del paciente y la cita -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <h5 class="text-primary fw-bold">Información del paciente</h5>
+          <ul class="list-unstyled">
+            <li><strong>Nombre:</strong> {{ paciente.nombre }}</li>
+            <li><strong>Documento:</strong> {{ paciente.numDocumentoIdentificacion }}</li>
+            <li><strong>Edad:</strong> {{ paciente.edad }}</li>
+            <li><strong>EPS:</strong> {{ paciente.eps }}</li>
+            <li><strong>Teléfono:</strong> {{ paciente.telefono }}</li>
+          </ul>
+        </div>
+
+        <div class="col-md-6">
+          <h5 class="text-primary fw-bold">Información de la cita</h5>
+          <ul class="list-unstyled">
+            <li><strong>Fecha:</strong> {{ cita.fecha|date:"d/m/Y" }}</li>
+            <li><strong>Hora:</strong> {{ cita.hora|time:"H:i" }}</li>
+            <li><strong>Servicio (CUPS):</strong> {{ cita.codigo_cups.codigo_cups }} - {{ cita.codigo_cups.nombre }}</li>
+            <li><strong>Valor servicio:</strong> ${{ cita.codigo_cups.valor }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Formulario de facturación -->
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- Fila 1 -->
+        <div class="row g-3">
+          <div class="col-md-3">
+            <label class="form-label fw-bold">{{ form_factura.forma_pago.label }}</label>
+            {{ form_factura.forma_pago }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">{{ form_factura.subtotal.label }}</label>
+            {{ form_factura.subtotal }}
+            <div class="form-text">Se inicializa con el valor del CUPS.</div>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">{{ form_factura.descuento.label }}</label>
+            {{ form_factura.descuento }}
+          </div>
+          <div class="col-md-3 d-flex align-items-center">
+            <div class="form-check mt-4">
+              {{ form_factura.iva_aplica }}
+              <label class="form-check-label fw-bold" for="id_iva_aplica">Aplicar IVA</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fila 2 -->
+        <div class="row g-3 mt-2">
+          <div class="col-md-3">
+            <label class="form-label fw-bold">{{ form_factura.copago.label }}</label>
+            {{ form_factura.copago }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">{{ form_factura.cuota_moderadora.label }}</label>
+            {{ form_factura.cuota_moderadora }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">{{ form_factura.bonos.label }}</label>
+            {{ form_factura.bonos }}
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">{{ form_factura.impuestos.label }}</label>
+            {{ form_factura.impuestos }}
+          </div>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="row g-3 mt-2">
+          <div class="col-md-12">
+            <label class="form-label fw-bold">{{ form_factura.observaciones.label }}</label>
+            {{ form_factura.observaciones }}
+          </div>
+        </div>
+
+        <!-- Totales -->
+        <div class="row mt-3">
+          <div class="col-md-3 ms-auto">
+            <label class="form-label fw-bold">{{ form_factura.total.label }}</label>
+            {{ form_factura.total }}
+          </div>
+        </div>
+
+        <div class="text-end mt-4">
+          <button type="submit" class="btn btn-success btn-lg px-4">
+            💾 Guardar factura
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Script de cálculo automático -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    function round2(value) {
+        return Math.round(value * 100) / 100;
+    }
+
+    function calcularTotales() {
+        let subtotal = parseFloat(document.getElementById("id_subtotal").value) || 0;
+        let descuento = parseFloat(document.getElementById("id_descuento").value) || 0;
+        let copago = parseFloat(document.getElementById("id_copago").value) || 0;
+        let cuota = parseFloat(document.getElementById("id_cuota_moderadora").value) || 0;
+        let bonos = parseFloat(document.getElementById("id_bonos").value) || 0;
+
+        let aplicaIVA = document.getElementById("id_iva_aplica").checked;
+        let impuestos = aplicaIVA ? round2((subtotal - descuento) * 0.19) : 0;
+
+        let total = round2((subtotal - descuento) + impuestos - (copago + cuota + bonos));
+        if (total < 0) total = 0;
+
+        document.getElementById("id_impuestos").value = impuestos.toFixed(2);
+        document.getElementById("id_total").value = total.toFixed(2);
+    }
+
+    ["id_subtotal", "id_descuento", "id_copago", "id_cuota_moderadora", "id_bonos", "id_iva_aplica"].forEach(id => {
+        let input = document.getElementById(id);
+        if (input) {
+            input.addEventListener("input", calcularTotales);
+            input.addEventListener("change", calcularTotales);
+        }
+    });
+
+    // cálculo inicial
+    calcularTotales();
+});
+</script>
+{% endblock %}

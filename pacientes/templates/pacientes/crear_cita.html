@@ -1,0 +1,10 @@
+<!-- templates/pacientes/crear_cita.html -->
+<h1>Crear Cita</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+</form>
+
+<a href="{% url 'citas:listado_citas' %}">Volver al listado</a>

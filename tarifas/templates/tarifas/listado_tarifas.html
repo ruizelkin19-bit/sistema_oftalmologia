@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tarifas - Consultorio</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body class="container mt-4">
+    <h2 class="mb-4">Listado de Tarifas</h2>
+
+    <a href="{% url 'crear_tarifa' %}" class="btn btn-primary mb-3">+ Nueva Tarifa</a>
+
+    {% if tarifas %}
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Valor</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tarifa in tarifas %}
+                <tr>
+                    <td>{{ tarifa.codigo }}</td>
+                    <td>{{ tarifa.nombre }}</td>
+                    <td>${{ tarifa.valor|floatformat:0 }}</td>
+                    <td>
+                        {% if tarifa.activo %}
+                            <span class="badge bg-success">Activo</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'editar_tarifa' tarifa.id %}" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="{% url 'eliminar_tarifa' tarifa.id %}" class="btn btn-sm btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">No hay tarifas registradas.</div>
+    {% endif %}
+</body>
+</html>

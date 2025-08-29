@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.btn-equal {
+  height: 36px;
+  font-size: 0.9rem;
+}
+.table-hover tbody tr:hover {
+  background-color: #e9f5ff;
+  transition: background-color 0.3s ease;
+}
+.table thead {
+  background-color: #0d6efd;
+  color: white;
+}
+.table th, .table td {
+  vertical-align: middle !important;
+  font-size: 0.9rem;
+}
+.header-section {
+  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgb(75 108 183 / 0.3);
+  font-size: 1.25rem;
+}
+.action-btn {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  transition: transform 0.15s ease;
+}
+.action-btn:hover {
+  transform: scale(1.05);
+}
+</style>
+
+<div class="container mt-4">
+
+  <div class="header-section d-flex justify-content-between align-items-center flex-wrap">
+      <h2 class="mb-0">📄 Listado de Rips</h2>
+      <!-- Puedes añadir un botón para crear factura si tienes esa funcionalidad -->
+  </div>
+
+  <form method="get" class="card p-3 mb-4 shadow-sm border-0">
+      <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Documento del paciente</label>
+              <input type="text" name="documento" 
+                     value="{{ documento|default:'' }}" 
+                     class="form-control form-control-sm" placeholder="Número de documento">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Fecha inicio</label>
+              <input type="date" name="fecha_inicio" value="{{ fecha_inicio|default:'' }}" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Fecha fin</label>
+              <input type="date" name="fecha_fin" value="{{ fecha_fin|default:'' }}" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-3 d-flex align-items-end gap-2">
+              <button type="submit" class="btn btn-primary btn-sm flex-grow-1 shadow-sm btn-equal">Filtrar</button>
+              <a href="{% url 'rips:listado_rips' %}" class="btn btn-outline-secondary btn-sm px-3 shadow-sm">Limpiar</a>
+          </div>
+      </div>
+  </form>
+
+  {% if facturas %}
+  <div class="table-responsive shadow-sm rounded">
+      <table class="table table-bordered table-hover align-middle mb-0">
+          <thead>
+              <tr>
+                  <th style="min-width:80px;">ID</th>
+                  <th style="min-width:150px;">Paciente</th>
+                  <th style="min-width:120px;">Fecha</th>
+                  <th style="min-width:100px;">Valor</th>
+                  <th style="min-width:120px;" class="text-center">Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for factura in facturas %}
+              <tr>
+                  <td class="fw-semibold text-primary">{{ factura.id }}</td>
+                  <td>{{ factura.paciente.primer_nombre }} {{ factura.paciente.primer_apellido }}</td>
+                  <td>{{ factura.fecha|date:"d/m/Y" }}</td>
+                  <td>${{ factura.valor|floatformat:2 }}</td>
+                  <td class="text-center">
+                      <a href="{% url 'rips:exportar_us' %}?factura_id={{ factura.id }}" target="_blank" class="btn btn-sm btn-outline-success action-btn" title="Descargar US">
+                        Descargar US
+                      </a>
+                      <!-- Puedes agregar más botones aquí -->
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+  <!-- Paginación -->
+  <nav aria-label="Paginación de facturas" class="mt-3">
+    <ul class="pagination justify-content-center">
+      {% if facturas.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ facturas.previous_page_number }}&documento={{ documento }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}">Anterior</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+      {% endif %}
+
+      <li class="page-item disabled">
+        <span class="page-link">Página {{ facturas.number }} de {{ facturas.paginator.num_pages }}</span>
+      </li>
+
+      {% if facturas.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ facturas.next_page_number }}&documento={{ documento }}&fecha_inicio={{ fecha_inicio }}&fecha_fin={{ fecha_fin }}">Siguiente</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  {% else %}
+  <div class="alert alert-warning text-center fs-6">
+      No hay facturas registradas.
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

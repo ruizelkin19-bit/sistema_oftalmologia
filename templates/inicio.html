@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Sistema Oftalmológico{% endblock %}
+
+{% block content %}
+<style>
+  .hero {
+    background: #f8fafc;
+    padding: 60px 0;
+    text-align: center;
+    color: #334e68;
+  }
+  .hero h1 {
+    font-weight: 700;
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .hero p {
+    font-size: 1.2rem;
+    color: #627d98;
+    max-width: 600px;
+    margin: 0 auto 3rem auto;
+  }
+  .features {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .feature-card {
+    background: white;
+    border: 1px solid #d9e2ec;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgb(50 50 93 / 0.1);
+    width: 220px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: #334e68;
+    transition: box-shadow 0.3s ease;
+    text-decoration: none;
+  }
+  .feature-card:hover {
+    box-shadow: 0 6px 15px rgb(50 50 93 / 0.15);
+  }
+  .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #3b82f6;
+  }
+  .feature-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .feature-desc {
+    font-size: 0.95rem;
+    color: #627d98;
+  }
+</style>
+
+<div class="hero">
+  <h1>Sistema Oftalmológico</h1>
+  <p>Gestión integral para clínicas y consultorios oftalmológicos. Administra pacientes, citas, historias clínicas e inventario con simplicidad y seguridad.</p>
+</div>
+
+<div class="features">
+  <a href="{% url 'pacientes:buscar_paciente' %}" class="feature-card">
+    <div class="feature-icon">👁️</div>
+    <div class="feature-title">Pacientes</div>
+    <div class="feature-desc">Información médica completa y organizada.</div>
+  </a>
+
+  <a href="{% url 'citas:listado_citas' %}" class="feature-card">
+    <div class="feature-icon">📅</div>
+    <div class="feature-title">Citas</div>
+    <div class="feature-desc">Agenda y controla tus consultas médicas.</div>
+  </a>
+
+  <a href="{% url 'historias:listado_historias' %}" class="feature-card">
+    <div class="feature-icon">📋</div>
+    <div class="feature-title">Historias Clínicas</div>
+    <div class="feature-desc">Registra diagnósticos y tratamientos.</div>
+  </a>
+
+  <a href="{% url 'productos:listado_productos' %}" class="feature-card">
+    <div class="feature-icon">📦</div>
+    <div class="feature-title">Inventario</div>
+    <div class="feature-desc">Control eficiente de insumos y medicamentos.</div>
+  </a>
+
+  <a href="{% url 'informes:listado_informes' %}" class="feature-card">
+    <div class="feature-icon">📑</div>
+    <div class="feature-title">RIPS</div>
+    <div class="feature-desc">Exportar archivos de RIPS (US, AC, AP, etc.).</div>
+  </a>
+</div>
+{% endblock %}

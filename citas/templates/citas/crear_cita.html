@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Crear Nueva Cita</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="paciente" class="form-label">Paciente</label>
+      {{ form.paciente|as_widget(attrs={'class': 'form-control'}) }}
+    </div>
+    <div class="mb-3">
+      <label for="fecha" class="form-label">Fecha</label>
+      {{ form.fecha|as_widget(attrs={'class': 'form-control'}) }}
+    </div>
+    <div class="mb-3">
+      <label for="hora" class="form-label">Hora</label>
+      {{ form.hora|as_widget(attrs={'class': 'form-control'}) }}
+    </div>
+    <div class="mb-3">
+      <label for="motivo" class="form-label">Motivo</label>
+      {{ form.motivo|as_widget(attrs={'class': 'form-control', 'rows': '3'}) }}
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar cita</button>
+    <a href="{% url 'citas:listado_citas' %}" class="btn btn-secondary">Volver</a>
+  </form>
+</div>
+{% endblock %}

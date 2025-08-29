@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}Informes del Sistema{% endblock %}
+
+{% block content %}
+<style>
+.btn-equal {
+  height: 36px;
+  font-size: 0.9rem;
+}
+.table-hover tbody tr:hover {
+  background-color: #e9f5ff;
+  transition: background-color 0.3s ease;
+}
+.table thead {
+  background-color: #0d6efd;
+  color: white;
+}
+.table th, .table td {
+  vertical-align: middle !important;
+  font-size: 0.9rem;
+}
+.header-section {
+  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgb(75 108 183 / 0.3);
+  font-size: 1.25rem;
+}
+.action-btn {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  transition: transform 0.15s ease;
+}
+.action-btn:hover {
+  transform: scale(1.05);
+}
+</style>
+
+<div class="container mt-4">
+
+  <div class="header-section d-flex justify-content-between align-items-center flex-wrap">
+      <h2 class="mb-0">📈 Generación de Informes</h2>
+      <!-- Aquí puedes agregar un botón si necesitas -->
+  </div>
+
+  <!-- Formulario de filtro con fechas -->
+  <form method="get" id="filtro-fechas" class="card p-3 mb-4 shadow-sm border-0 row g-3">
+
+    <div class="col-md-4 d-flex flex-column">
+      <label for="fecha_inicio" class="form-label fw-semibold mb-1">Desde:</label>
+      <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control form-control-sm" required>
+    </div>
+
+    <div class="col-md-4 d-flex flex-column">
+      <label for="fecha_fin" class="form-label fw-semibold mb-1">Hasta:</label>
+      <input type="date" name="fecha_fin" id="fecha_fin" class="form-control form-control-sm" required>
+    </div>
+
+    <div class="col-md-4 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary btn-sm w-100 btn-equal">Aplicar filtro de fechas</button>
+    </div>
+  </form>
+
+  <p>Selecciona el módulo del cual deseas exportar la información en Excel:</p>
+
+  <div class="row row-cols-1 row-cols-md-2 g-4 mt-2">
+    <!-- Pacientes -->
+    <div class="col">
+      <div class="card border-primary h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">👤 Pacientes</h5>
+          <p class="card-text">Descargar base de pacientes.</p>
+          <a href="#" onclick="exportarConFechas('pacientes')" class="btn btn-outline-primary">Descargar Excel</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Citas -->
+    <div class="col">
+      <div class="card border-success h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">📅 Citas</h5>
+          <p class="card-text">Exportar citas médicas.</p>
+          <a href="#" onclick="exportarConFechas('citas')" class="btn btn-outline-success">Descargar Excel</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historias -->
+    <div class="col">
+      <div class="card border-info h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">📄 Historias Clínicas</h5>
+          <p class="card-text">Exportar historias clínicas.</p>
+          <a href="#" onclick="exportarConFechas('historias')" class="btn btn-outline-info">Descargar Excel</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inventario -->
+    <div class="col">
+      <div class="card border-warning h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">📦 Inventario</h5>
+          <p class="card-text">Exportar productos registrados.</p>
+          <a href="#" onclick="exportarConFechas('productos')" class="btn btn-outline-warning">Descargar Excel</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function exportarConFechas(modulo) {
+    const fechaInicio = document.getElementById('fecha_inicio').value;
+    const fechaFin = document.getElementById('fecha_fin').value;
+
+    if (!fechaInicio || !fechaFin) {
+      alert('Por favor selecciona ambas fechas antes de exportar.');
+      return;
+    }
+
+    const url = `/informes/exportar/${modulo}/?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`;
+    window.location.href = url;
+  }
+</script>
+
+{% endblock %}

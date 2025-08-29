@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Calendario de Citas - {{ meses|dict_get:mes }}/{{ anio }}</h2>
+
+  <form method="get" class="row mb-3 g-2">
+    <div class="col-md-3">
+      <select name="mes" class="form-select">
+        {% for num, nombre in meses %}
+          <option value="{{ num }}" {% if num == mes %}selected{% endif %}>{{ nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="anio" class="form-select">
+        {% for y in 2023|to_range:2030 %}
+          <option value="{{ y }}" {% if y == anio %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-primary w-100">Ver</button>
+    </div>
+  </form>
+
+  <table class="table table-bordered text-center">
+    <thead class="table-light">
+      <tr>
+        <th>Dom</th><th>Lun</th><th>Mar</th><th>Mié</th><th>Jue</th><th>Vie</th><th>Sáb</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for semana in semanas %}
+        <tr>
+          {% for dia in semana %}
+            <td
+              {% if dia.month != mes %}
+                class="text-muted bg-light"
+              {% endif %}
+              style="vertical-align: top; height: 100px; width: 14%;"
+            >
+              <div>
+                {{ dia.day }}
+                {% if dia in dias_con_citas %}
+                  <span class="badge bg-success ms-1" title="Tiene cita">●</span>
+                {% endif %}
+              </div>
+
+              {% if dia.month == mes and dia >= hoy %}
+                <a href="{% url 'citas:agenda_dia' %}?fecha={{ dia|date:'Y-m-d' }}" class="btn btn-sm btn-outline-info mt-1">Ver día</a>
+              {% elif dia.month == mes %}
+                <div class="text-muted small">No disponible</div>
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

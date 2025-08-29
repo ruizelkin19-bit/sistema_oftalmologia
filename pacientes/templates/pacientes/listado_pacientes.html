@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Editar Paciente</h2>
+  <form method="POST">
+    {% csrf_token %}
+
+    <!-- SECCIÓN 1: DATOS PERSONALES -->
+    <div class="card mb-4">
+      <div class="card-header bg-primary text-white">Datos Personales</div>
+      <div class="card-body">
+        <div class="row">
+          {% for field in form %}
+            {% if field.name in "nombre tipoDocumentoIdentificacion numDocumentoIdentificacion num_DocumentoIdObligado fechaNacimiento codSexo documento telefono correo".split %}
+              <div class="col-md-6 mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% for error in field.errors %}
+                  <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 2: DATOS ADMINISTRATIVOS -->
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">Datos Administrativos y Atención</div>
+      <div class="card-body">
+        <div class="row">
+          {% for field in form %}
+            {% if field.name in "tipoUsuario codPaisResidencia codMunicipioResidencia codZonaTerritorialResidencia incapacidad codPaisOrigen consecutivoUsuario codPrestador fechaInicioAtencion numAutorizacion codConsulta modalidadGrupoServicioTecSal grupoServicios codServicio finalidadTecnologiaSalud causaMotivoAtencion".split %}
+              <div class="col-md-6 mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% for error in field.errors %}
+                  <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN 3: DIAGNÓSTICO Y FACTURACIÓN -->
+    <div class="card mb-4">
+      <div class="card-header bg-warning text-dark">Diagnóstico y Facturación</div>
+      <div class="card-body">
+        <div class="row">
+          {% for field in form %}
+            {% if field.name in "codDiagnosticoPrincipal codDiagnosticoRelacionado1 codDiagnosticoRelacionado2 codDiagnosticoRelacionado3 tipoDiagnosticoPrincipal vrServicio conceptoRecaudo valorPagoModerador numFEVPagoModerador".split %}
+              <div class="col-md-6 mb-3">
+                {{ field.label_tag }}
+                {{ field }}
+                {% for error in field.errors %}
+                  <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="text-end">
+      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

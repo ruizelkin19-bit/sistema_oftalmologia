@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 40px;
+            color: #000;
+        }
+        .header, .footer {
+            text-align: center;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+        .header p {
+            margin: 2px 0;
+        }
+        hr {
+            margin: 15px 0;
+            border: 1px solid #ccc;
+        }
+        .details, .items, .totals {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+        .details td, .items td, .items th, .totals td {
+            border: 1px solid #333;
+            padding: 6px;
+        }
+        .items th {
+            background-color: #f2f2f2;
+        }
+        .totals td {
+            text-align: right;
+        }
+        .totals td:first-child {
+            font-weight: bold;
+        }
+        .info {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <!-- Si luego tienes logo, puedes incluirlo con una etiqueta <img src="ruta_logo.png" height="80"> -->
+        <h2>Consultorio Oftalmológico</h2>
+        <p>NIT: 123456789-0</p>
+        <p>Cra 45 # 10-50, Bogotá D.C.</p>
+        <p>Tel: (601) 123 4567 - Correo: contacto@oftalmo.com</p>
+        <hr>
+        <p><strong>Factura de venta No:</strong> {{ factura.numero_factura }}</p>
+        <p><strong>Número de control interno:</strong> {{ factura.numero_control }}</p>
+        <p><strong>Fecha de emisión:</strong> {{ factura.fecha|date:"d/m/Y" }}</p>
+    </div>
+
+    <h4>Datos del paciente</h4>
+    <table class="details">
+        <tr>
+            <td><strong>Nombre:</strong> {{ paciente.nombre }}</td>
+            <td><strong>Documento:</strong> {{ paciente.documento }}</td>
+        </tr>
+        <tr>
+            <td><strong>Teléfono:</strong> {{ paciente.telefono }}</td>
+            <td><strong>Correo:</strong> {{ paciente.correo }}</td>
+        </tr>
+    </table>
+
+    <h4>Detalle del servicio</h4>
+    <table class="items">
+        <thead>
+            <tr>
+                <th>Descripción</th>
+                <th>Cantidad</th>
+                <th>Valor unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Consulta oftalmológica - {{ cita.fecha|date:"d/m/Y" }}</td>
+                <td>1</td>
+                <td>${{ factura.valor|floatformat:0 }}</td>
+                <td>${{ factura.valor|floatformat:0 }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="totals">
+        <tr>
+            <td>Total:</td>
+            <td style="width: 120px;">${{ factura.valor|floatformat:0 }}</td>
+        </tr>
+    </table>
+
+    <div class="info">
+        <p><strong>Forma de pago:</strong> Contado</p>
+        <p><em>Esta factura no genera IVA.</em></p>
+        <p>Resolución DIAN No. 12345 del 01/01/2025</p>
+    </div>
+
+    <div class="footer">
+        <hr>
+        <p>Gracias por su visita</p>
+    </div>
+</body>
+</html>

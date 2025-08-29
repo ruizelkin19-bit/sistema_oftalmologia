@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Editar Historia Clínica - Paciente: {{ historia.paciente.nombre }}</h2>
+
+  <form method="post" class="needs-validation" novalidate>
+    {% csrf_token %}
+
+    <div class="row">
+      {% for field in form %}
+        <div class="mb-3 col-md-6">
+          <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small">
+              {{ field.errors }}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a href="{% url 'historias:ver_historia_clinica' historia.pk %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

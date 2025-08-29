@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+.btn-equal {
+  height: 36px;
+  font-size: 0.9rem;
+}
+.table-hover tbody tr:hover {
+  background-color: #e9f5ff;
+  transition: background-color 0.3s ease;
+}
+.table thead {
+  background-color: #0d6efd;
+  color: white;
+}
+.table th, .table td {
+  vertical-align: middle !important;
+  font-size: 0.9rem;
+}
+.header-section {
+  background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgb(75 108 183 / 0.3);
+  font-size: 1.25rem;
+}
+.action-btn {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.6rem;
+  transition: transform 0.15s ease;
+}
+.action-btn:hover {
+  transform: scale(1.05);
+}
+</style>
+
+<div class="container mt-4">
+
+  <div class="header-section d-flex justify-content-between align-items-center flex-wrap">
+      <h2 class="mb-0">🏥 Listado de Admisiones - {{ fecha }}</h2>
+      <a href="{% url 'admisiones:crear_admision' %}" class="btn btn-light fw-semibold shadow-sm py-1 px-3 mt-2 mt-md-0">Admitir nuevo paciente</a>
+  </div>
+
+  <form method="get" class="card p-3 mb-4 shadow-sm border-0">
+      <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Documento</label>
+              <input type="text" name="documento"
+                     value="{{ request.GET.documento|default:'' }}"
+                     class="form-control form-control-sm" placeholder="Documento">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Desde</label>
+              <input type="date" name="fecha_inicio" value="{{ request.GET.fecha_inicio|default:'' }}" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-3">
+              <label class="form-label fw-semibold mb-1">Hasta</label>
+              <input type="date" name="fecha_fin" value="{{ request.GET.fecha_fin|default:'' }}" class="form-control form-control-sm">
+          </div>
+          <div class="col-md-2">
+              <label class="form-label fw-semibold mb-1">Estado</label>
+              <select name="estado" class="form-select form-select-sm">
+                  <option value="" {% if not request.GET.estado %}selected{% endif %}>Todos</option>
+                  <option value="pendiente" {% if request.GET.estado == "pendiente" %}selected{% endif %}>Pendiente</option>
+                  <option value="Admitido" {% if request.GET.estado == "Admitido" %}selected{% endif %}>Admitido</option>
+                  <option value="atendido" {% if request.GET.estado == "atendido" %}selected{% endif %}>Atendido</option>
+                  <option value="cancelado" {% if request.GET.estado == "cancelado" %}selected{% endif %}>Cancelado</option>
+              </select>
+          </div>
+          <div class="col-md-2 d-flex align-items-end gap-2">
+              <button type="submit" class="btn btn-primary btn-sm flex-grow-1 shadow-sm btn-equal">Filtrar</button>
+              <a href="{% url 'admisiones:listado_admisiones' %}" class="btn btn-outline-secondary btn-sm px-3 shadow-sm">Limpiar</a>
+          </div>
+      </div>
+  </form>
+
+  {% if admisiones %}
+  <div class="table-responsive shadow-sm rounded">
+      <table class="table table-bordered table-hover align-middle mb-0">
+          <thead>
+              <tr>
+                  <th style="min-width:90px;">N° Control</th>
+                  <th style="min-width:100px;">Documento</th>
+                  <th style="min-width:150px;">Paciente</th>
+                  <th style="min-width:110px;">Fecha Admisión</th>
+                  <th style="min-width:80px;">Hora</th>
+                  <th style="min-width:110px;">Estado</th>
+                  <th style="min-width:150px;" class="text-center">Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for adm in admisiones %}
+              <tr>
+                  <td class="fw-semibold text-primary">{{ adm.numero_control }}</td>
+                  <td>{{ adm.paciente.numDocumentoIdentificacion }}</td>
+                  <td>{{ adm.paciente.nombre }}</td>
+                  <td>{{ adm.fecha_admision|date:"d/m/Y" }}</td>
+                  <td>{{ adm.fecha_admision|time:"H:i" }}</td>
+                  <td>
+                    {% if adm.estado == "pendiente" %}
+                      <span class="badge bg-warning text-dark text-capitalize">{{ adm.get_estado_display }}</span>
+                    {% elif adm.estado == "Admitido" %}
+                      <span class="badge bg-info text-dark text-capitalize">{{ adm.get_estado_display }}</span>
+                    {% elif adm.estado == "atendido" %}
+                      <span class="badge bg-success text-capitalize">{{ adm.get_estado_display }}</span>
+                    {% elif adm.estado == "cancelado" %}
+                      <span class="badge bg-danger text-capitalize">{{ adm.get_estado_display }}</span>
+                    {% else %}
+                      <span class="badge bg-secondary text-capitalize">{{ adm.get_estado_display }}</span>
+                    {% endif %}
+                  </td>
+                  <td class="text-center">
+                      <!-- Botones principales -->
+                      <a href="{% url 'admisiones:ver_admision' adm.id %}" class="btn btn-sm btn-outline-info action-btn" title="Ver admisión">Ver</a>
+
+                      {% if adm.estado == 'pendiente' %}
+                          <a href="{% url 'admisiones:crear_admision' %}?cita_id={{ adm.cita.id }}" class="btn btn-sm btn-outline-warning action-btn" title="Admitir paciente">Admitir</a>
+                      {% elif adm.estado == 'Admitido' %}
+                          <a href="{% url 'historias:atender' adm.id %}" class="btn btn-sm btn-outline-success action-btn" title="Atender paciente">Atender</a>
+                          <a href="{% url 'admisiones:generar_pdf' adm.id %}" target="_blank" class="btn btn-sm btn-outline-primary action-btn" title="Generar PDF">PDF</a>
+                      {% elif adm.estado == 'atendido' %}
+                          {% with historia=adm.historia %}
+                              {% if historia %}
+                                  <a href="{% url 'historias:detalle_historia' historia.id %}" class="btn btn-sm btn-outline-secondary action-btn" title="Ver historia clínica">Historia</a>
+                                  <a href="{% url 'admisiones:generar_pdf' adm.id %}" target="_blank" class="btn btn-sm btn-outline-primary action-btn" title="Generar PDF">PDF</a>
+                              {% else %}
+                                  <span class="text-danger small">Sin historia</span>
+                              {% endif %}
+                          {% endwith %}
+                      {% endif %}
+                  </td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+  {% else %}
+  <div class="alert alert-warning text-center fs-6">
+      No hay admisiones registradas.
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

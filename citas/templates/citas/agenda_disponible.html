@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Agenda Disponible - 
+    {% for num, nombre in meses %}
+      {% if num == mes %}{{ nombre }}{% endif %}
+    {% endfor %}
+    /{{ anio }}
+  </h2>
+
+  <!-- Selector mes/año -->
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+      <select name="mes" class="form-select">
+        {% for num, nombre in meses %}
+          <option value="{{ num }}" {% if num == mes %}selected{% endif %}>{{ nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="anio" class="form-select">
+        {% for y in años %}
+          <option value="{{ y }}" {% if y == anio %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 align-self-end">
+      <button type="submit" class="btn btn-primary w-100">Ver</button>
+    </div>
+  </form>
+
+  <table class="table table-bordered text-center">
+    <thead class="table-light">
+      <tr>
+        <th>Dom</th><th>Lun</th><th>Mar</th><th>Mié</th><th>Jue</th><th>Vie</th><th>Sáb</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for semana in semanas %}
+        <tr>
+          {% for dia in semana %}
+            {% comment %} Día bloqueado si no es del mes o si es anterior a hoy {% endcomment %}
+            {% if dia.month != mes or dia < hoy %}
+              <td class="text-muted bg-light" style="vertical-align: top; height: 100px; width: 14%;">
+                <div>
+                  {{ dia.day }}
+                  {% if dia in dias_con_citas %}
+                    <span class="badge bg-success ms-1" title="Tiene cita">●</span>
+                  {% endif %}
+                </div>
+              </td>
+            {% else %}
+              <td style="vertical-align: top; height: 100px; width: 14%;">
+                <div>
+                  {{ dia.day }}
+                  {% if dia in dias_con_citas %}
+                    <span class="badge bg-success ms-1" title="Tiene cita">●</span>
+                  {% endif %}
+                </div>
+                <a href="{% url 'citas:agenda_dia' anio=anio mes=mes dia=dia.day %}" class="btn btn-outline-info btn-sm mt-1">Ver día</a>
+              </td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

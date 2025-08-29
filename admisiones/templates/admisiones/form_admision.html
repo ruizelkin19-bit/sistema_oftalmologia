@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if mensaje_error %}
+<div class="alert alert-danger">
+    {{ mensaje_error }}
+</div>
+{% endif %}
+
+<h2>Registrar Admisión</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Admitir</button>
+</form>
+
+{% endblock %}

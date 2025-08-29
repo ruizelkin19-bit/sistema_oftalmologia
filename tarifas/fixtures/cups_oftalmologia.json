@@ -1,0 +1,72 @@
+[
+  {
+    "codigo_cups": "890201",
+    "nombre": "Consulta por medicina especializada",
+    "descripcion": "Consulta oftalmología general",
+    "valor": 40000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902201",
+    "nombre": "Campimetría computarizada",
+    "descripcion": "Evaluación del campo visual",
+    "valor": 50000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902100",
+    "nombre": "Tonometría",
+    "descripcion": "Medición de presión intraocular",
+    "valor": 30000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902101",
+    "nombre": "Curva diaria de presión intraocular",
+    "descripcion": "Control del glaucoma a lo largo del día",
+    "valor": 45000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902102",
+    "nombre": "Refracción optométrica",
+    "descripcion": "Valoración de agudeza visual y necesidad de lentes",
+    "valor": 25000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902106",
+    "nombre": "Test de visión de colores",
+    "descripcion": "Detección de daltonismo o alteraciones en la percepción de colores",
+    "valor": 22000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902103",
+    "nombre": "Biomicroscopía",
+    "descripcion": "Examen con lámpara de hendidura",
+    "valor": 27000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902107",
+    "nombre": "Fondo de ojo",
+    "descripcion": "Evaluación del nervio óptico, mácula y retina",
+    "valor": 38000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902110",
+    "nombre": "Oftalmoscopía directa o indirecta",
+    "descripcion": "Exploración visual interna del ojo",
+    "valor": 35000,
+    "activo": true
+  },
+  {
+    "codigo_cups": "902108",
+    "nombre": "Topografía corneal",
+    "descripcion": "Mapeo de la curvatura de la córnea",
+    "valor": 60000,
+    "activo": true
+  }
+]

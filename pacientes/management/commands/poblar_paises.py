@@ -1,0 +1,80 @@
+from django.core.management.base import BaseCommand
+from pacientes.models import Pais
+
+class Command(BaseCommand):
+    help = 'Pobla la base de datos con la lista oficial de países'
+
+    def handle(self, *args, **options):
+        paises = [
+            ('004', 'AFGANISTÁN'), ('008', 'ALBANIA'), ('010', 'ANTÁRTIDA'),
+            ('012', 'ARGELIA'), ('016', 'SAMOA AMERICANA'), ('020', 'ANDORRA'),
+            ('024', 'ANGOLA'), ('028', 'ANTIGUA Y BARBUDA'), ('031', 'AZERBAIYÁN'),
+            ('032', 'ARGENTINA'), ('036', 'AUSTRALIA'), ('040', 'AUSTRIA'),
+            ('044', 'BAHAMAS'), ('048', 'BAHRÁIN'), ('050', 'BANGLADESH'),
+            ('051', 'ARMENIA'), ('052', 'BARBADOS'), ('056', 'BÉLGICA'),
+            ('060', 'BERMUDAS'), ('064', 'BUTÁN'), ('068', 'BOLIVIA'),
+            ('070', 'BOSNIA Y HERZEGOVINA'), ('072', 'BOTSUANA'), ('076', 'BRASIL'),
+            ('084', 'BELICE'), ('090', 'ISLAS SALOMÓN'), ('100', 'BULGARIA'),
+            ('104', 'MYANMAR'), ('108', 'BURUNDI'), ('112', 'BIELORRUSIA'),
+            ('116', 'CAMBOYA'), ('120', 'CAMERÚN'), ('124', 'CANADÁ'),
+            ('132', 'CABO VERDE'), ('136', 'ISLAS CAIMÁN'), ('140', 'REP. CENTROAFRICANA'),
+            ('144', 'SRI LANKA'), ('148', 'CHAD'), ('152', 'CHILE'), ('156', 'CHINA'),
+            ('158', 'TAIWÁN'), ('170', 'COLOMBIA'), ('174', 'COMORAS'),
+            ('175', 'MAYOTTE'), ('178', 'CONGO'), ('180', 'REP. DEMOCRÁTICA DEL CONGO'),
+            ('184', 'ISLAS COOK'), ('188', 'COSTA RICA'), ('191', 'CROACIA'),
+            ('192', 'CUBA'), ('196', 'CHIPRE'), ('203', 'REP. CHECA'),
+            ('204', 'BENÍN'), ('208', 'DINAMARCA'), ('212', 'DOMINICA'),
+            ('214', 'REP. DOMINICANA'), ('218', 'ECUADOR'), ('222', 'EL SALVADOR'),
+            ('226', 'GUINEA ECUATORIAL'), ('231', 'ETIOPÍA'), ('233', 'ESTONIA'),
+            ('242', 'FIYI'), ('246', 'FINLANDIA'), ('250', 'FRANCIA'),
+            ('262', 'YIBUTI'), ('268', 'GEORGIA'), ('270', 'GAMBIA'),
+            ('275', 'TERRITORIOS PALESTINOS'), ('276', 'ALEMANIA'),
+            ('288', 'GHANA'), ('300', 'GRECIA'), ('320', 'GUATEMALA'),
+            ('328', 'GUYANA'), ('332', 'HAITÍ'), ('340', 'HONDURAS'),
+            ('344', 'HONG KONG'), ('348', 'HUNGRÍA'), ('352', 'ISLANDIA'),
+            ('356', 'INDIA'), ('360', 'INDONESIA'), ('364', 'IRÁN'),
+            ('368', 'IRAQ'), ('372', 'IRLANDA'), ('376', 'ISRAEL'),
+            ('380', 'ITALIA'), ('388', 'JAMAICA'), ('392', 'JAPÓN'),
+            ('398', 'KAZAJISTÁN'), ('400', 'JORDANIA'), ('404', 'KENIA'),
+            ('408', 'COREA DEL NORTE'), ('410', 'COREA DEL SUR'),
+            ('414', 'KUWAIT'), ('417', 'KIRGUISTÁN'), ('418', 'LAOS'),
+            ('422', 'LÍBANO'), ('426', 'LESOTO'), ('428', 'LETONIA'),
+            ('430', 'LIBERIA'), ('434', 'LIBIA'), ('440', 'LITUANIA'),
+            ('442', 'LUXEMBURGO'), ('446', 'MACAO'), ('450', 'MADAGASCAR'),
+            ('454', 'MALAUI'), ('458', 'MALASIA'), ('462', 'MALDIVAS'),
+            ('466', 'MALI'), ('470', 'MALTA'), ('478', 'MAURITANIA'),
+            ('480', 'MAURICIO'), ('484', 'MÉXICO'), ('490', 'MICRONESIA'),
+            ('496', 'MONGOLIA'), ('498', 'MOLDAVIA'), ('499', 'MONTENEGRO'),
+            ('504', 'MARRUECOS'), ('508', 'MOZAMBIQUE'), ('512', 'OMÁN'),
+            ('516', 'NAMIBIA'), ('524', 'NEPAL'), ('528', 'PAÍSES BAJOS'),
+            ('532', 'CURAZAO'), ('540', 'NUEVA CALEDONIA'), ('554', 'NUEVA ZELANDA'),
+            ('558', 'NICARAGUA'), ('562', 'NÍGER'), ('566', 'NIGERIA'),
+            ('570', 'NIUE'), ('578', 'NORUEGA'), ('586', 'PAKISTÁN'),
+            ('591', 'PANAMÁ'), ('598', 'PAPÚA NUEVA GUINEA'),
+            ('600', 'PARAGUAY'), ('604', 'PERÚ'), ('608', 'FILIPINAS'),
+            ('616', 'POLONIA'), ('620', 'PORTUGAL'), ('624', 'GUINEA-BISÁU'),
+            ('626', 'TIMOR ORIENTAL'), ('630', 'PUERTO RICO'), ('634', 'CATAR'),
+            ('642', 'RUMANIA'), ('643', 'RUSIA'), ('646', 'RUANDA'),
+            ('652', 'SAN BARTOLOMÉ'), ('654', 'SANTA HELENA'), ('659', 'SAN CRISTÓBAL Y NIEVES'),
+            ('660', 'ANGUILA'), ('662', 'SANTA LUCÍA'), ('670', 'SAN VICENTE Y LAS GRANADINAS'),
+            ('674', 'SAN MARINO'), ('678', 'SANTO TOMÉ Y PRÍNCIPE'),
+            ('682', 'ARABIA SAUDITA'), ('686', 'SENEGAL'), ('688', 'SERBIA'),
+            ('690', 'SEYCHELLES'), ('694', 'SIERRA LEONA'), ('702', 'SINGAPUR'),
+            ('703', 'ESLOVAQUIA'), ('704', 'VIETNAM'), ('705', 'ESLOVENIA'),
+            ('710', 'SUDÁFRICA'), ('716', 'ZIMBABUE'), ('724', 'ESPAÑA'),
+            ('729', 'SUDÁN'), ('740', 'SURINAM'), ('748', 'ESWATINI'),
+            ('752', 'SUECIA'), ('756', 'SUIZA'), ('760', 'SIRIA'),
+            ('762', 'TAYIKISTÁN'), ('764', 'TAILANDIA'), ('768', 'TOGO'),
+            ('776', 'TONGA'), ('780', 'TRINIDAD Y TOBAGO'), ('784', 'EMIRATOS ÁRABES UNIDOS'),
+            ('788', 'TÚNEZ'), ('792', 'TURQUÍA'), ('795', 'TURKMENISTÁN'),
+            ('800', 'UGANDA'), ('804', 'UCRANIA'), ('807', 'MACEDONIA DEL NORTE'),
+            ('818', 'EGIPTO'), ('826', 'REINO UNIDO'), ('834', 'TANZANIA'),
+            ('840', 'ESTADOS UNIDOS'), ('854', 'BURKINA FASO'), ('858', 'URUGUAY'),
+            ('860', 'UZBEKISTÁN'), ('862', 'VENEZUELA'), ('876', 'WALLIS Y FUTUNA'),
+            ('882', 'SAMOA'), ('887', 'YEMEN'), ('894', 'ZAMBIA')
+        ]
+
+        for codigo, nombre in paises:
+            Pais.objects.get_or_create(codigo_dane=codigo, nombre=nombre)
+
+        self.stdout.write(self.style.SUCCESS('Países cargados correctamente.'))
