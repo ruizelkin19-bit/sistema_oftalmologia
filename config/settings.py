@@ -9,12 +9,12 @@ load_dotenv()
 # Directorio base del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Seguridad
+# 🔒 Seguridad
 SECRET_KEY = os.getenv("SECRET_KEY", "clave-secreta-en-caso-de-fallo")
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
-# Aplicaciones instaladas
+# 📦 Apps instaladas
 INSTALLED_APPS = [
     'jazzmin',
     'django.contrib.admin',
@@ -23,7 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # Apps del proyecto
     'core',
     'pacientes',
@@ -42,10 +41,10 @@ INSTALLED_APPS = [
     'soportes',
 ]
 
-# Middleware
+# 🛡 Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Para servir static en producción
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,7 +55,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-# Templates
+# 📄 Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -76,14 +75,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Base de datos (Render)
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv("DATABASE_URL")
-    )
-}
+# 🗄 Base de datos
+if os.getenv("DATABASE_URL"):
+    # Render o producción
+    DATABASES = {
+        "default": dj_database_url.parse(os.getenv("DATABASE_URL"), conn_max_age=600)
+    }
+else:
+    # Local
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+        }
+    }
 
-# Validadores de contraseña
+# 🔑 Validadores de contraseña
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -91,29 +102,29 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Idioma y zona horaria
+# 🌎 Idioma y zona horaria
 LANGUAGE_CODE = 'es-co'
 TIME_ZONE = 'America/Bogota'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Archivos estáticos para Render
+# 📂 Archivos estáticos
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"  # Aquí se copia todo con collectstatic
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Archivos multimedia
+# 📂 Archivos multimedia
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
-# Login
+# 🔑 Login
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/admin/login/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Jazzmin
+# 🎨 Jazzmin
 JAZZMIN_SETTINGS = {
     "site_title": "Sistema Oftalmológico",
     "site_header": "Panel de Administración",
@@ -145,7 +156,7 @@ JAZZMIN_SETTINGS = {
     "custom_links": {},
 }
 
-# Datos IPS
+# 🏥 Datos IPS
 IPS_CONFIG = {
     "nombre": "GABRIEL ANTONIO CHILD ESCOBAR",
     "nit": "3.228.541-4",
@@ -154,5 +165,5 @@ IPS_CONFIG = {
     "email": "contacto@ipsxyz.com",
 }
 
-# Permitir PDFs en iframe
+# 🔓 Permitir PDFs en iframe
 X_FRAME_OPTIONS = 'SAMEORIGIN'
