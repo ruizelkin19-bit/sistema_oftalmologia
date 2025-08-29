@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     # Apps del proyecto
     'core',
     'pacientes',
@@ -32,7 +33,6 @@ INSTALLED_APPS = [
     'productos',
     'rips',
     'widget_tweaks',
-    'pacientes.templatetags.form_filters',
     'informes',
     'django_extensions',
     'facturacion',
@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 # 🛡 Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Para servir static en producción
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -76,23 +76,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # 🗄 Base de datos
-if os.getenv("DATABASE_URL"):
-    # Render o producción
-    DATABASES = {
-        "default": dj_database_url.parse(os.getenv("DATABASE_URL"), conn_max_age=600)
-    }
-else:
-    # Local
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
-        }
-    }
+DATABASES = {
+    "default": dj_database_url.config(
+        default=f"postgres://{os.getenv('DB_USER','postgres')}:{os.getenv('DB_PASSWORD','postgres')}@{os.getenv('DB_HOST','localhost')}:{os.getenv('DB_PORT','5432')}/{os.getenv('DB_NAME','sistema_oftalmologia')}",
+        conn_max_age=600
+    )
+}
 
 # 🔑 Validadores de contraseña
 AUTH_PASSWORD_VALIDATORS = [
